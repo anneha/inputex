@@ -156,6 +156,54 @@ Y.extend(inputEx.EmailField, inputEx.StringField, {
       
    },
    
+   
+   
+    /**
+    * Render here DOM node
+    */
+    renderComponent: function() {
+      // This element wraps the input node in a float: none div
+      this.wrapEl = inputEx.cn('div', {className: 'inputEx-EmailField-wrapper'});
+
+      // Attributes of the input field
+      var attributes = {};
+      attributes.type = 'text';
+      attributes.id = this.divEl.id?this.divEl.id+'-field':Y.guid();
+      if(this.options.size) { attributes.size = this.options.size; }
+      if(this.options.name) { attributes.name = this.options.name; }
+      if(this.options.readonly) { attributes.readonly = 'readonly'; }
+
+      if(this.options.maxLength) { attributes.maxLength = this.options.maxLength; }
+      attributes.autocomplete = this.options.autocomplete ? 'on' : 'off';
+
+      // Create the node
+      this.el = inputEx.cn('input', attributes);
+
+      // Append it to the main element
+      this.wrapEl.appendChild(this.el);
+      this.fieldContainer.appendChild(this.wrapEl);
+     
+       var button = Y.inputEx.cn('button', null, null, "sendMail");
+       var that = this;
+       Y.on( "click" ,function() {
+	  that.sendEmail();
+      },button);
+
+      this.fieldContainer.appendChild(button);
+    },
+    
+    /**
+    * function to send the mail
+    */
+   sendEmail: function(){
+      var mailaddress = this.getValue();
+      
+      if(mailaddress && this.validate()){
+	location.href="mailto:"+mailaddress;
+      }
+     
+   },
+   
    /**
     * Set the value to lower case since email have no case
     * @return {String} The email string
